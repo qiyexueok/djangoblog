@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    博客—详情页
+{% endblock %}
+
+
+{% block content %}
+
+<section class="container">
+<div class="content-wrap">
+<div class="content">
+  <header class="article-header">
+      {% for post in post_list.object_list %}
+        <article class="excerpt excerpt-1" style="">
+        <a class="focus" href="blopost" title="{{ post.title }}" target="_blank"><img class="thumb" data-original="{{ MEDIA_URL }}{{ post.cover }}" src="{{ MEDIA_URL }}{{ post.cover }}" </a>
+        <header><a class="cat" href="#" title="{{ post.category.category }}">{{ post.category.category }}<i></i></a>
+            <h2> <a href="{% url 'blog:blogpost' post.id %}" title="{{ post.title }}" target="_blank">{{ post.title }}</a> </h2>
+        </header>
+        <p class="meta">
+            <time class="time"><i class="glyphicon glyphicon-time"></i>{{ post.pub_time | date:'Y-m-d' }}</time>
+            <span class="views"><i class="glyphicon glyphicon-eye-open"></i>{{ post.visits }}</span><a class="comment" href="##comment" title="评论" target="_blank"><i class="glyphicon glyphicon-comment"></i>{{ post.comment_set.count }} </a>
+        </p>
+        </article>
+        <p class="note"
+        {% autoescape off %}
+        {{ post.content|safe|truncatechars_html:200 }}
+
+        {% endautoescape %}
+    {% endfor %}
+
+
+          {% include 'blogs/_pagination.html' %}
+{% endblock %}

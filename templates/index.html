@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block title %}
+    博客首页
+{% endblock %}
+
+
+{% block content %}
+
+ <div id="focusslide" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+        {% for banner in banner_lists %}
+            {% if banner.is_active %}
+                 <li data-target="#focusslide" data-slide-to="{{banner.index}}" class="active"></li>
+            {% else %}
+                 <li data-target="#focusslide" data-slide-to="{{banner.index}}"></li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+
+    <div class="carousel-inner" role="listbox">
+        {%  for banner in banner_lists %}
+        {% if banner.is_active %}
+            <div class="item active">
+                <a href="{{ banner.link_url }}" target="_blank" title="{{ banner.title }}">
+                    <img src="{{ MEDIA_URL }}{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive">
+                </a>
+            </div>
+        {% else %}
+           <div class="item active">
+                <a href="{{ banner.link_url }}" target="_blank" title="{{ banner.title }}">
+                    <img src="{{ MEDIA_URL }}{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive">
+                </a>
+           </div>
+        {% endif %}
+        {% endfor %}
+    </div>
+
+
+    <a class="left carousel-control" href="#focusslide" role="button" data-slide="prev" rel="nofollow">
+     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+     <span class="sr-only">上一个</span> </a>
+  <a class="right carousel-control" href="#focusslide" role="button" data-slide="next" rel="nofollow">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">下一个</span> </a>
+  </div>
+
+     {% for post in recommend_posts %}
+     <article class="excerpt-minic excerpt-minic-index">
+         <h2 ><span class="red" >推荐</span><a target="_blank" href="{% url 'blog:blogpost' post.id %}" title="{{ post.title }}">{{ post.title }}</a></h2>
+         {% autoescape off %}
+         {{ post.content|safe|truncatechars_html:50}}
+         {% endautoescape %}
+     </article>
+     {% endfor %}
+
+
+
+     {% for post in post_lists %}
+         <article class="excerpt excerpt-1" style="">
+         <a class="focus" href="{% url 'blog:blogpost' post.id %}/"  title="{{ post.title }}" target="_blank" ><img class="thumb" data-original="{{ MEDIA_URL }}{{ post.image }}" src="{{ MEDIA_URL}}{{ post.image }}" alt="{{ post.title }}" style="display: inline"</a>
+         <header ><a class="cat" href="#" title="{{ post.category.name }}">{{ post.category.name }}<i></i></a>
+         <h2><a href="{% url 'blog:blogpost' post.id %}" title="{{ post.title }}" target="_blank">{{ post.title }}</a>
+         </h2>
+         </header>
+         <p class="meta">
+             <time class="time"><i class="glyphicon glyphicon-time"></i>{{ post.pub_date | date:'Y-m-d' }}</time>
+             <span class="visits"><i class="glyphicon glyphicon-eye-open"></i>{{ post.visits }}</span><a class="comment" href="{% url 'blog:blogpost' post.id %}" title="评论" target="_blank"><i class="glyphicon glyphicon-comment"></i>{{ post.comment_set.count }}</a>
+         </p>
+         <p class="note">
+             {%  autoescape off %}
+                 {{ post.content|safe|truncatechars_html:300 }}
+             {% endautoescape %}
+         </p>
+         </article>
+     {% endfor %}
+
+
+<div class="title" >
+     <h3 >博客分类</h3>
+     <div class="more">
+         {%  for category in category_lists %}
+             <h4>    <a href="{% url 'blog:category' category.id %}" title="{{ category.category }}">{{ category.category }}</a></h4>
+         {% endfor %}
+     </div>
+ </div>
+
+
+
+ <div class="title" >
+     <h3 >博客分类</h3>
+     <div class="more">
+         {%  for category in category_lists %}
+             <h4>    <a href="{% url 'blog:category' category.id %}" title="{{ category.category }}">{{ category.category }}</a></h4>
+         {% endfor %}
+     </div>
+ </div>
+
+ <div class="widget widget_sentence">
+     <h3>友情链接</h3>
+     <div class="widget-sentence-link">
+         {% for friendlylink in friendlylinks %}
+             <a href="{{ friendlylink.url }}" title="{{ friendlylink.title }}" target="__blank">{{ friendlylink.title }}</a> &nbsp;&nbsp; &nbsp;
+         {% endfor %}
+     </div>
+ </div>
+
+
+{% endblock %}
